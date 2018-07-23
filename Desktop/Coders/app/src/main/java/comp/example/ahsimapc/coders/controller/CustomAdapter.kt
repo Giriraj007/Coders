@@ -14,14 +14,30 @@ class CustomAdapter( contxt:Context, categorie:List<Categories>): BaseAdapter() 
 
     val mcontext=contxt
     val mcategorie=categorie
+
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view:View=LayoutInflater.from(mcontext).inflate(R.layout.list_item,null)
-        val image:ImageView=view.findViewById(R.id.imageView)
-        val text:TextView=view.findViewById(R.id.textView)
+        val view:View
+        var holder:ViewHolder
+        if(convertView==null)
+        {
+           view=LayoutInflater.from(mcontext).inflate(R.layout.list_item,null)
+            holder=ViewHolder()
+            println("new Created")
+
+            holder.imageview=view.findViewById(R.id.imageView)
+            holder.textview=view.findViewById(R.id.textView)
+            view.tag=holder
+        }else
+        {println("old used")
+            holder=convertView.tag as ViewHolder
+            view=convertView
+        }
+
+
         val cat=mcategorie[position]
-        text.text=cat.title
+        holder.textview?.text=cat.title
         val imageId=mcontext.resources.getIdentifier(cat.image,"drawable",mcontext.packageName)
-        image.setImageResource(imageId)
+        holder.imageview?.setImageResource(imageId)
         return view
 
 
@@ -36,4 +52,14 @@ return 0       }
     override fun getCount(): Int {
 
 return mcategorie.size    }
+
+
+
+    private class ViewHolder{
+        var imageview:ImageView?=null
+        var textview:TextView?=null
+
+
+    }
+
 }
